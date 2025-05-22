@@ -279,3 +279,61 @@ button.active {
     50% { background-color: #27ae60; }
     100% { background-color: #2ecc71; }
 }
+
+/* Mejoras para la sección de progreso */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 20px;
+    background: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4CAF50;
+    width: 0%;
+    transition: width 0.5s;
+}
+
+.solutions-box {
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.solutions-scroll {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.solutions-scroll li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    font-family: 'Courier New', monospace;
+    color: #333;
+}
+
+.solutions-scroll li:last-child {
+    border-bottom: none;
+}
+
+.level-complete {
+    animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
