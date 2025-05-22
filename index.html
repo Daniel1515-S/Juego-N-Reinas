@@ -7,22 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
         <h1>Juego de las N Reinas</h1>
-        <div class="rules">
-            <h2>Modos de Juego:</h2>
-            <button id="classic-btn">Clásico (sin ataques)</button>
-            <button id="relaxed-btn">Relajado (2 reinas permitidas)</button>
-        </div>
+        
         <div class="controls">
-            <label for="size">Tamaño del tablero:</label>
-            <input type="number" id="size" min="4" max="8" value="4">
+            <div class="game-modes">
+                <button id="classic-btn">Modo Clásico</button>
+                <button id="relaxed-btn">Modo Relajado</button>
+            </div>
+            <div class="size-selector">
+                <label for="size">Tamaño:</label>
+                <input type="number" id="size" min="4" max="10" value="5">
+            </div>
         </div>
-        <div id="board" class="board"></div>
-        <div id="message" class="message"></div>
+
+        <div class="board-container" id="boardContainer"></div>
     </div>
-    <script ="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-<div class="board-container" id="boardContainer"></div>
-<script src="script.js"></script>
