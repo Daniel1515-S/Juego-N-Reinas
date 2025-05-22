@@ -1,4 +1,3 @@
-/* Reset y estilos base */
 * {
     margin: 0;
     padding: 0;
@@ -111,6 +110,7 @@ button.active {
 .board-container {
     display: flex;
     justify-content: center;
+    margin: 20px 0;
 }
 
 .board-wrapper {
@@ -200,29 +200,19 @@ button.active {
     display: block;
 }
 
-@media (max-width: 600px) {
-    .config {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .modes {
-        flex-direction: column;
-    }
-}
-
-/* Sección de progreso */
 .progress-section {
     margin-top: 30px;
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid #2ecc71;
 }
 
 .progress-section h3 {
     color: #2c3e50;
     margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .progress-bar {
@@ -241,143 +231,87 @@ button.active {
     transition: width 0.5s ease;
 }
 
-.solutions-table {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 15px;
-    padding: 10px;
-    background-color: white;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+.solutions-box {
+    margin-top: 20px;
 }
 
-.solutions-table h4 {
+.solutions-box h4 {
     color: #2c3e50;
     margin-bottom: 10px;
-}
-
-#solutions-list {
-    list-style-type: none;
-}
-
-#solutions-list li {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-    font-family: monospace;
-}
-
-#solutions-list li:last-child {
-    border-bottom: none;
-}
-
-.level-complete {
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { background-color: #2ecc71; }
-    50% { background-color: #27ae60; }
-    100% { background-color: #2ecc71; }
-}
-
-/* Mejoras para la sección de progreso */
-.progress-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.progress-bar {
-    flex-grow: 1;
-    height: 20px;
-    background: #eee;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: #4CAF50;
-    width: 0%;
-    transition: width 0.5s;
-}
-
-.solutions-box {
-    background: white;
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.solutions-scroll {
-    max-height: 150px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-.solutions-scroll li {
-    padding: 8px 0;
-    border-bottom: 1px dashed #eee;
-    font-family: 'Courier New', monospace;
-    color: #333;
-}
-
-.solutions-scroll li:last-child {
-    border-bottom: none;
-}
-
-.level-complete {
-    animation: pulse-green 2s infinite;
-}
-
-@keyframes pulse-green {
-    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-}
-
-.solutions-container {
-    margin-top: 25px;
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
 }
 
 .solutions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
-    margin-top: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.solution-mini {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .solution-mini-board {
     display: grid;
-    grid-template-columns: repeat(var(--size), 20px);
+    grid-template-columns: repeat(var(--size), 15px);
     gap: 1px;
-    background: #333;
+    background-color: #333;
     padding: 2px;
-    border-radius: 3px;
+    margin-bottom: 5px;
 }
 
 .mini-cell {
-    width: 20px;
-    height: 20px;
-    background: white;
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    font-size: 10px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 12px;
+    align-items: center;
 }
 
 .mini-cell.queen::after {
     content: '♛';
-    color: #d63031;
+    color: #e74c3c;
 }
 
-#progress-count {
-    float: right;
-    color: #666;
-    font-size: 0.9em;
+.solution-mini p {
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.completed {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+@media (max-width: 600px) {
+    .config {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modes {
+        flex-direction: column;
+    }
+    
+    .board {
+        grid-template-columns: repeat(var(--size), 40px);
+    }
+    
+    .cell {
+        width: 40px;
+        height: 40px;
+    }
 }
