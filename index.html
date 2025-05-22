@@ -10,6 +10,12 @@
     <div class="game-container">
         <header>
             <h1>Juego de las N Reinas</h1>
+            <div class="instructions">
+                <h2>Instrucciones:</h2>
+                <p><strong>Modo Clásico:</strong> Coloca todas las reinas (N) sin que se ataquen.</p>
+                <p><strong>Modo Relajado:</strong> Coloca N-1 reinas con máximo 2 en misma línea.</p>
+                <p>Haz clic en las casillas para colocar/remover reinas (♛).</p>
+            </div>
             <div id="message" class="message"></div>
         </header>
 
@@ -18,9 +24,15 @@
                 <button id="classic-btn" class="active">Modo Clásico</button>
                 <button id="relaxed-btn">Modo Relajado</button>
             </div>
-            <div class="size-control">
-                <label for="size">Tamaño:</label>
-                <input type="number" id="size" min="4" max="10" value="5">
+            <div class="config">
+                <div class="size-control">
+                    <label for="size">Tamaño:</label>
+                    <input type="number" id="size" min="4" max="10" value="4">
+                </div>
+                <div class="queens-control" id="queens-control">
+                    <label for="queens">Reinas:</label>
+                    <input type="number" id="queens" min="1" max="4" value="4">
+                </div>
             </div>
         </div>
 
