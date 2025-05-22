@@ -448,3 +448,32 @@ function registerSolution(solution) {
     }
     return false;
 }
+
+function updateProgressDisplay() {
+    const progressCount = document.getElementById('progress-count');
+    const solutionsGrid = document.getElementById('solutions-grid');
+    
+    // Actualizar contador
+    progressCount.textContent = `${foundSolutions.length}/${totalSolutions}`;
+    
+    // Generar mini-tableros para cada solución
+    solutionsGrid.innerHTML = foundSolutions.map((sol, idx) => {
+        let boardHTML = `<div class="solution-mini-board" style="--size: ${currentSize}">`;
+        
+        // Crear mini-tablero
+        for (let row = 0; row < currentSize; row++) {
+            for (let col = 0; col < currentSize; col++) {
+                const hasQueen = sol.some(q => q[0] === row && q[1] === col);
+                boardHTML += `<div class="mini-cell ${hasQueen ? 'queen' : ''}"></div>`;
+            }
+        }
+        
+        return `${boardHTML}</div><small>Solución ${idx+1}</small>`;
+    }).join('');
+    
+    // Comprobar si se completó
+    if (foundSolutions.length === totalSolutions && totalSolutions > 0) {
+        document.querySelector('.solutions-container').classList.add('completed');
+        showMessage(`¡Nivel ${currentSize}x${currentSize} dominado!`, false);
+    }
+}
