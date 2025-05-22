@@ -273,3 +273,105 @@ function createBoard() {
     document.querySelector('.progress-section').classList.remove('level-complete');
     // ... (resto del código)
 }
+
+// Objeto con todas las soluciones conocidas (ampliable)
+const allSolutions = {
+    4: [
+        [[0,1],[1,3],[2,0],[3,2]], // Solución 1
+        [[0,2],[1,0],[2,3],[3,1]]  // Solución 2
+    ],
+    5: [
+        [[0,0],[1,2],[2,4],[3,1],[4,3]],
+        [[0,0],[1,3],[2,1],[3,4],[4,2]],
+        [[0,1],[1,3],[2,0],[3,2],[4,4]]
+    ],
+    // Añadir más soluciones para otros tamaños
+};
+
+// Función para normalizar soluciones (ordenar por fila)
+function normalizeSolution(queens) {
+    return queens.map(q => [q.row, q.col])
+                 .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+}
+
+// Función para verificar solución
+function checkSolution() {
+    if (queens.length !== targetQueens) return false;
+
+    const currentSolution = normalizeSolution(queens);
+    const solutionKey = JSON.stringify(currentSolution);
+    
+    // Verificar si es solución válida y nueva
+    const isValid = allSolutions[currentSize]?.some(sol => {
+        return JSON.stringify(sol) === solutionKey;
+    });
+
+    if (isValid) {
+        const wasNewSolution = registerSolution(solutionKey);
+        if (wasNewSolution) {
+            updateProgressDisplay();
+            showSuccessMessage();
+            return true;
+        }
+    }
+    return false;
+}
+
+// Registrar solución (devuelve true si era nueva)
+function registerSolution(solutionKey) {
+    if (!foundSolutions.includes(solutionKey)) {
+        foundSolutions.push(solutionKey);
+        localStorage.setItem(`solutions-${currentSize}`, JSON.stringify(foundSolutions));
+        return true;
+    }
+    return false;
+}
+
+// Actualizar la visualización del progreso
+function updateProgressDisplay() {
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const solutionsList = document.getElementById('solutions-list');
+    
+    totalSolutions = allSolutions[currentSize]?.length || 0;
+    const percentage = totalSolutions > 0 ? 
+        Math.min(100, (foundSolutions.length / totalSolutions) * 100) : 0;
+    
+    progressFill.style.width = `${percentage}%`;
+    progressText.textContent = `${foundSolutions.length}/${totalSolutions} soluciones`;
+    
+    // Actualizar lista
+    solutionsList.innerHTML = foundSolutions.map((sol, i) => {
+        const positions = JSON.parse(sol).map(pos => 
+            `${String.fromCharCode(65+pos[1])}${pos[0]+1}`).join(', ');
+        return `<li>Solución ${i+1}: ${positions}</li>`;
+    }).join('');
+    
+    // Comprobar nivel completado
+    if (foundSolutions.length === totalSolutions && totalSolutions > 0) {
+        document.querySelector('.progress-section').classList.add('level-complete');
+        showMessage(`¡NIVEL ${currentSize}x${currentSize} COMPLETADO!`, false);
+    }
+}
+
+// Mostrar mensaje de éxito
+function showSuccessMessage() {
+    const remaining = totalSolutions - foundSolutions.length;
+    const message = remaining > 0 ?
+        `¡Solución correcta! (Faltan ${remaining} más)` :
+        `¡Todas las soluciones encontradas!`;
+    showMessage(message, false);
+}
+
+// Al iniciar el juego, cargar soluciones guardadas
+function loadSavedSolutions() {
+    const saved = localStorage.getItem(`solutions-${currentSize}`);
+    foundSolutions = saved ? JSON.parse(saved) : [];
+    updateProgressDisplay();
+}
+
+// Modificar createBoard para incluir carga inicial
+function createBoard() {
+    loadSavedSolutions();
+    // ... resto del código existente ...
+}
