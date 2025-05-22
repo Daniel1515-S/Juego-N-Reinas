@@ -79,3 +79,9 @@ button {
     align-items: center;
     justify-content: center;
 }
+
+.cell.queen::after {
+    content: '♛';
+    font-size: 40px;
+    color: #000;
+}
