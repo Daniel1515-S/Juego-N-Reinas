@@ -187,3 +187,89 @@ document.addEventListener('DOMContentLoaded', () => {
     updateControls();
     createBoard();
 });
+
+// Añade al inicio con las otras variables
+const solutions = {
+    4: [
+        [[0,1],[1,3],[2,0],[3,2]],
+        [[0,2],[1,0],[2,3],[3,1]]
+    ],
+    5: [
+        [[0,0],[1,2],[2,4],[3,1],[4,3]],
+        [[0,0],[1,3],[2,1],[3,4],[4,2]]
+    ],
+    // Añade más soluciones para otros tamaños
+};
+let foundSolutions = [];
+let totalSolutions = 0;
+
+// Función para verificar solución
+function checkSolution() {
+    if (queens.length !== targetQueens) return false;
+    
+    const currentSolution = queens.map(q => [q.row, q.col]).sort((a,b) => a[0] - b[0]);
+    const solutionKey = JSON.stringify(currentSolution);
+    
+    // Verificar si es una solución válida
+    const isValid = solutions[currentSize]?.some(sol => {
+        return JSON.stringify(sol) === solutionKey;
+    });
+    
+    if (isValid && !foundSolutions.includes(solutionKey)) {
+        foundSolutions.push(solutionKey);
+        totalSolutions = solutions[currentSize]?.length || 0;
+        updateProgress();
+        
+        // Mostrar en la lista
+        const solutionItem = document.createElement('li');
+        solutionItem.textContent = `Solución ${foundSolutions.length}: ${queens.map(q => 
+            `${String.fromCharCode(65+q.col)}${q.row+1}`).join(', ')}`;
+        document.getElementById('solutions-list').appendChild(solutionItem);
+        
+        if (foundSolutions.length === totalSolutions && totalSolutions > 0) {
+            showMessage(`¡NIVEL COMPLETADO! Encontraste todas las soluciones para ${currentSize}x${currentSize}`, false);
+            document.querySelector('.progress-section').classList.add('level-complete');
+        } else {
+            showMessage(`¡Solución correcta! (${foundSolutions.length}/${totalSolutions})`, false);
+        }
+        return true;
+    }
+    return false;
+}
+
+// Función para actualizar progreso
+function updateProgress() {
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const percentage = totalSolutions > 0 ? (foundSolutions.length / totalSolutions) * 100 : 0;
+    
+    progressFill.style.width = `${percentage}%`;
+    progressText.textContent = `${foundSolutions.length}/${totalSolutions} soluciones encontradas`;
+}
+
+// Modifica la función placeQueen para llamar a checkSolution
+function placeQueen(row, col) {
+    // ... (código anterior)
+    
+    if (validateMove(row, col)) {
+        cell.classList.add('queen');
+        queens.push({ row, col });
+        showMessage(`Reina colocada en ${String.fromCharCode(65+col)}${row+1} (${queens.length}/${targetQueens})`);
+        
+        if (queens.length === targetQueens) {
+            if (!checkSolution()) {
+                showMessage("Configuración completa pero no es una solución válida", true);
+            }
+        }
+    }
+}
+
+// Modifica createBoard para resetear progreso
+function createBoard() {
+    foundSolutions = [];
+    totalSolutions = solutions[currentSize]?.length || 0;
+    updateProgress();
+    document.getElementById('solutions-list').innerHTML = '';
+    document.querySelector('.progress-section').classList.remove('level-complete');
+    // ... (resto del código)
+}
