@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Elementos del DOM
-    const boardContainer = document.getElementById('boardContainer');
+    const boardContainer = document.getElementById('board-container');
     const classicBtn = document.getElementById('classic-btn');
     const relaxedBtn = document.getElementById('relaxed-btn');
     const sizeInput = document.getElementById('size');
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para mostrar mensajes
     function showMessage(text, isError = false) {
         messageEl.textContent = text;
-        messageEl.className = isError ? 'message error' : 'message success';
+        messageEl.className = `message ${isError ? 'error' : 'success'}`;
         setTimeout(() => messageEl.style.display = 'none', 3000);
     }
 
@@ -23,27 +23,95 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSize = parseInt(sizeInput.value);
         boardContainer.innerHTML = '';
         queens = [];
-        messageEl.style.display = 'none';
         
-        // (Mantén el mismo código de creación de tablero con coordenadas)
-        // ... [código previo de createBoard] ...
+        // Crear contenedor principal
+        const boardWrapper = document.createElement('div');
+        boardWrapper.className = 'board-wrapper';
+        
+        // Crear coordenadas superiores (letras)
+        const topLabels = document.createElement('div');
+        topLabels.className = 'coords top-coords';
+        for (let i = 0; i < currentSize; i++) {
+            const label = document.createElement('div');
+            label.textContent = String.fromCharCode(65 + i); // A, B, C...
+            topLabels.appendChild(label);
+        }
+        
+        // Crear coordenadas laterales (números)
+        const sideLabels = document.createElement('div');
+        sideLabels.className = 'coords side-coords';
+        for (let i = 0; i < currentSize; i++) {
+            const label = document.createElement('div');
+            label.textContent = i + 1;
+            sideLabels.appendChild(label);
+        }
+        
+        // Crear tablero
+        const board = document.createElement('div');
+        board.className = 'board';
+        board.style.setProperty('--size', currentSize);
+        
+        for (let i = 0; i < currentSize; i++) {
+            for (let j = 0; j < currentSize; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                cell.addEventListener('click', () => placeQueen(i, j));
+                board.appendChild(cell);
+            }
+        }
+        
+        // Ensamblar todo
+        boardWrapper.appendChild(topLabels);
+        const middleRow = document.createElement('div');
+        middleRow.style.display = 'flex';
+        middleRow.appendChild(sideLabels);
+        middleRow.appendChild(board);
+        boardWrapper.appendChild(middleRow);
+        boardContainer.appendChild(boardWrapper);
         
         showMessage(`Modo ${mode} activado. Tablero ${currentSize}x${currentSize} listo!`);
+    }
+
+    // Función para colocar reinas
+    function placeQueen(row, col) {
+        const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+        
+        if (cell.classList.contains('queen')) {
+            cell.classList.remove('queen');
+            queens = queens.filter(q => !(q.row === row && q.col === col));
+            showMessage(`Reina removida de ${String.fromCharCode(65+col)}${row+1}`);
+        } else {
+            if (validateMove(row, col)) {
+                cell.classList.add('queen');
+                queens.push({ row, col });
+                showMessage(`Reina colocada en ${String.fromCharCode(65+col)}${row+1}`);
+                
+                if (queens.length === currentSize) {
+                    if (mode === 'classic') {
+                        showMessage("¡Felicidades! Solución correcta en modo clásico");
+                    } else {
+                        showMessage("Tablero completo en modo relajado");
+                    }
+                }
+            }
+        }
     }
 
     // Función para validar movimientos
     function validateMove(row, col) {
         if (mode === 'classic') {
-            const attacking = queens.some(q => 
+            const isAttacked = queens.some(q => 
                 q.row === row || 
                 q.col === col || 
                 Math.abs(q.row - row) === Math.abs(q.col - col)
             );
-            if (attacking) {
+            if (isAttacked) {
                 showMessage("¡Error! Reina bajo ataque en modo clásico", true);
                 return false;
             }
-        } else { // Modo relajado
+        } else {
             const rowCount = queens.filter(q => q.row === row).length;
             const colCount = queens.filter(q => q.col === col).length;
             const diag1Count = queens.filter(q => (q.row - q.col) === (row - col)).length;
@@ -57,41 +125,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     }
 
-    // Función para colocar reinas
-    function placeQueen(row, col) {
-        const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-        
-        if (cell.classList.contains('queen')) {
-            cell.classList.remove('queen');
-            queens = queens.filter(q => !(q.row === row && q.col === col));
-            showMessage(`Reina removida en ${String.fromCharCode(65+col)}${row+1}`);
-        } else {
-            if (validateMove(row, col)) {
-                cell.classList.add('queen');
-                queens.push({ row, col });
-                showMessage(`Reina colocada en ${String.fromCharCode(65+col)}${row+1}`);
-                
-                // Verificar si se completó el tablero
-                if (queens.length === currentSize && mode === 'classic') {
-                    showMessage("¡Felicidades! Solución correcta en modo clásico");
-                }
-            }
-        }
-    }
-
-    // Event Listeners mejorados
+    // Event Listeners
     classicBtn.addEventListener('click', () => {
         mode = 'classic';
+        classicBtn.classList.add('active');
+        relaxedBtn.classList.remove('active');
         createBoard();
     });
 
     relaxedBtn.addEventListener('click', () => {
         mode = 'relaxed';
+        relaxedBtn.classList.add('active');
+        classicBtn.classList.remove('active');
         createBoard();
     });
 
     sizeInput.addEventListener('change', createBoard);
 
     // Inicialización
+    classicBtn.classList.add('active');
     createBoard();
 });
