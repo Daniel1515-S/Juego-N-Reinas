@@ -1,0 +1,39 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px auto;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cell.queen {
+    background-color: #ffcc00;
+}
+
+#reset-btn {
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
