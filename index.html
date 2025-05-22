@@ -9,9 +9,17 @@
 <body>
     <div class="container">
         <h1>Juego de las N Reinas</h1>
+        <div class="rules">
+            <h2>Modos de Juego:</h2>
+            <button id="classic-btn">Clásico (sin ataques)</button>
+            <button id="relaxed-btn">Relajado (2 reinas permitidas)</button>
+        </div>
+        <div class="controls">
+            <label for="size">Tamaño del tablero:</label>
+            <input type="number" id="size" min="4" max="8" value="4">
+        </div>
         <div id="board" class="board"></div>
         <div id="message" class="message"></div>
-        <button id="reset-btn">Reiniciar</button>
     </div>
     <script src="script.js"></script>
 </body>
