@@ -418,3 +418,33 @@ function generateAllUniqueSolutions(size) {
     // Implementación de un generador de soluciones únicas
     // (omitido por brevedad, pero puede usarse para ampliar)
 }
+
+// Al inicio del juego (en createBoard)
+function createBoard() {
+    // Cargar soluciones guardadas
+    const saved = localStorage.getItem(`queens-${currentSize}-solutions`);
+    foundSolutions = saved ? JSON.parse(saved) : [];
+    
+    // Inicializar contador
+    totalSolutions = allSolutions[currentSize]?.length || 0;
+    
+    updateProgressDisplay();
+    // ... resto del código ...
+}
+
+// Función mejorada para registrar soluciones
+function registerSolution(solution) {
+    const normalized = normalizeSolution(solution);
+    const solutionKey = JSON.stringify(normalized);
+    
+    // Verificar si es nueva
+    if (!foundSolutions.some(s => JSON.stringify(s) === solutionKey)) {
+        foundSolutions.push(normalized);
+        localStorage.setItem(
+            `queens-${currentSize}-solutions`,
+            JSON.stringify(foundSolutions)
+        );
+        return true;
+    }
+    return false;
+}
