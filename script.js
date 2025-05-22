@@ -94,3 +94,44 @@ function createBoard() {
     boardWrapper.appendChild(middleRow);
     boardContainer.appendChild(boardWrapper);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const boardContainer = document.getElementById('boardContainer');
+    const classicBtn = document.getElementById('classic-btn');
+    const relaxedBtn = document.getElementById('relaxed-btn');
+    const sizeInput = document.getElementById('size');
+    let mode = 'classic';
+    let queens = [];
+
+    function placeQueen(row, col) {
+        const cells = document.querySelectorAll('.cell');
+        const cell = Array.from(cells).find(c => 
+            c.dataset.row == row && c.dataset.col == col
+        );
+        
+        if (cell.classList.contains('queen')) {
+            cell.classList.remove('queen');
+            queens = queens.filter(q => !(q.row === row && q.col === col));
+        } else {
+            cell.classList.add('queen');
+            queens.push({ row, col });
+        }
+    }
+
+    // ... (resto del código de createBoard mostrado arriba)
+
+    classicBtn.addEventListener('click', () => {
+        mode = 'classic';
+        createBoard();
+        alert('Modo Clásico: Ninguna reina puede atacarse');
+    });
+
+    relaxedBtn.addEventListener('click', () => {
+        mode = 'relaxed';
+        createBoard();
+        alert('Modo Relajado: Máximo 2 reinas en línea');
+    });
+
+    sizeInput.addEventListener('change', createBoard);
+    createBoard();
+});
