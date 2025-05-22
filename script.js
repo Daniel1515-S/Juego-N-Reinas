@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let mode = 'classic'; // 'classic' o 'relaxed'
 
     // Crear tablero inicial
-    function createBoard() {
-        const size = parseInt(sizeInput.value);
-        board.innerHTML = '';
-        board.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+function createBoard() {
+    const size = parseInt(sizeInput.value);
+    boardContainer.innerHTML = '';
+    board.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+        const boardWrapper = document.createElement('div');
+    boardWrapper.className = 'board-wrapper';
         
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
@@ -23,6 +25,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Crear coordenadas superiores (letras)
+    const topLabels = document.createElement('div');
+    topLabels.className = 'coords top-coords';
+    for (let i = 0; i < size; i++) {
+        const label = document.createElement('div');
+        label.textContent = String.fromCharCode(65 + i); // A, B, C...
+        topLabels.appendChild(label);
+    }
+
+    // Crear coordenadas laterales (números)
+    const sideLabels = document.createElement('div');
+    sideLabels.className = 'coords side-coords';
+    for (let i = 0; i < size; i++) {
+        const label = document.createElement('div');
+        label.textContent = i + 1;
+        sideLabels.appendChild(label);
+    
     // Colocar o quitar reina
     function placeQueen(row, col) {
         const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
@@ -49,3 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
     sizeInput.addEventListener('change', createBoard);
     createBoard(); // Inicializar tablero al cargar
 });
+
+  // Crear tablero
+    const board = document.createElement('div');
+    board.className = 'board';
+    board.style.setProperty('--size', size);
+    
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = i;
+            cell.dataset.col = j;
+            cell.addEventListener('click', () => placeQueen(i, j));
+            board.appendChild(cell);
+        }
+    }
+    
+    // Ensamblar todo
+    boardWrapper.appendChild(topLabels);
+    const middleRow = document.createElement('div');
+    middleRow.style.display = 'flex';
+    middleRow.appendChild(sideLabels);
+    middleRow.appendChild(board);
+    boardWrapper.appendChild(middleRow);
+    boardContainer.appendChild(boardWrapper);
+}
